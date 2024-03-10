@@ -1,0 +1,12 @@
+﻿@model NewsPlatform3.Models.Article
+
+@{
+    ViewData["Title"] = "Article";
+}
+
+<h2>Article</h2>
+
+<p>Title: <b>@Model.Title</b></p>
+<p>@Model.Content</p>
+<p></p>
+<p>Positive index: <b>@TempData["PositivityIndex"]</b></p>
