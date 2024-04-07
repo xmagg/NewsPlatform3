@@ -1,9 +1,13 @@
+using NewsPlatform3.Models;
+
 namespace NewsPlatform3
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
+            await CreateDataUser();
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
@@ -32,5 +36,24 @@ namespace NewsPlatform3
 
             app.Run();
         }
+
+        private static async Task CreateDataUser()
+        {
+            using (var context = new DbNewsContext())
+            {
+                context.Database.EnsureCreated();
+
+                var user1 = new User()
+                {
+                    Id = Guid.NewGuid(),
+                    Login = "admin",
+                    Password = "admin",
+                    Level = 1
+                };
+                var u1 = await context.Users.AddAsync(user1);
+                var result = await context.SaveChangesAsync();
+            }
+        }
+
     }
 }
