@@ -6,7 +6,7 @@ namespace NewsPlatform3
     {
         public static async Task Main(string[] args)
         {
-            await CreateDataUser();
+            //await CreateDataUser();
 
             var builder = WebApplication.CreateBuilder(args);
 
@@ -48,7 +48,7 @@ namespace NewsPlatform3
                     Id = Guid.NewGuid(),
                     Login = "admin",
                     Password = "admin",
-                    Level = 1
+                    Level = 1   // 1 - admin, 2 - advanced user, 3 - regular user
                 };
                 var u1 = await context.Users.AddAsync(user1);
                 var result = await context.SaveChangesAsync();

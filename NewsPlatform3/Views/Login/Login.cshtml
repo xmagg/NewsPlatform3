@@ -1,5 +1,13 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@model NewsPlatform3.Models.User
+
+<h1>Welcome to log in/sign up</h1>
+
+@using (Html.BeginForm("Login","Login", FormMethod.Post))
+{
+    <div style="color:red;">@Html.ValidationSummary()</div>
+
+    <span>Login </span>@Html.TextBoxFor(x => x.Login)<br />
+    <span>Password </span>@Html.PasswordFor(x => x.Password)<br />
+
+    <button type="submit">Submit</button>
 }
