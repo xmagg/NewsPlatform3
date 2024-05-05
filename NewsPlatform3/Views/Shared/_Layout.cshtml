@@ -20,19 +20,37 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Articles" asp-action="GetListArticle">List</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Articles" asp-action="GetArticle">Article</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Login">Log in</a>
+                        </li>
+                        <li class="nav-item">
+                            @if (ViewData["isLoggedin"] == "1")
+                            {
+                                <a id="myMenu1" class="nav-link text-dark" asp-area="" asp-controller="Articles" asp-action="GetListArticle" style="pointer-events: auto>List</a>
+                            }
+                            else
+                            {
+                            <a id="myMenu1" class="nav-link text-light" asp-area="" asp-controller="Articles" asp-action="GetListArticle" style="pointer-events: none">List</a>
+                            }
+                        </li>
+                        <li class="nav-item">
+                            @if (ViewData["isLoggedin"] == "1")
+                            {
+                                <a id="myMenu2" class="nav-link text-dark" asp-area="" asp-controller="Articles" asp-action="GetArticle" style="pointer-events: auto>Article</a>
+
+                                <a class="nav-link text-light"></a>
+                            }
+                        </li>
+                        <li class="nav-item">
+                            @if (ViewData["isLoggedin"] == "1")
+                            {
+                                <a id="myMenu3" class="nav-link text-dark" asp-area="" asp-controller="Logout" asp-action="Index" style="pointer-events: auto">Log out</a>
+                            }
+                        </li>
+                        <li class="nav-item">
+                            @if (ViewData["isLoggedin"] == "1")
+                            {
+                                <a id="myMenu4" class="nav-link text-dark" style="pointer-events: none">[ Login: @ViewData["login"] / Level: @ViewData["level"] ]</a>
+                            }
                         </li>
                     </ul>
                 </div>

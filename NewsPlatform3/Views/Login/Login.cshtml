@@ -1,13 +1,20 @@
-﻿@model NewsPlatform3.Models.User
+﻿
+<h2>Welcome to log in/sign up</h2>
 
-<h1>Welcome to log in/sign up</h1>
+
 
 @using (Html.BeginForm("Login","Login", FormMethod.Post))
 {
     <div style="color:red;">@Html.ValidationSummary()</div>
-
-    <span>Login </span>@Html.TextBoxFor(x => x.Login)<br />
-    <span>Password </span>@Html.PasswordFor(x => x.Password)<br />
+    <span>@Html.RadioButton("isLogin", true, true) Login </span>
+    <span>@Html.RadioButton("isLogin", false) Register </span>
+    <br/>
+    <br>
+    <div>Login </div> @Html.TextBox("Login")
+    <br />
+    <div>Password </div> @Html.Password("Passwd")
+    <br />
+    <br />
 
     <button type="submit">Submit</button>
 }
