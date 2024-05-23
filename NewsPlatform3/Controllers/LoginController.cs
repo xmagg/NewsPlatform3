@@ -6,17 +6,23 @@ namespace NewsPlatform3.Controllers
 {
     public class LoginController : Controller
     {
+        public static Login thisLogin = new Login();
+        
+ //       public static Login LoginInstance
+ //       { 
+ //           get { return thisLogin; } 
+ //       }
+
         [HttpGet]
         public IActionResult Login()
         {
-            ViewData["isLoggedin"] = 0; // 0 - not logged in, 1 - logged in 
+            thisLogin.isL = false;
             return View();
         }
 
         [HttpPost]
         public IActionResult Login(string Login, string Passwd, Boolean isLogin)
         {
-            ViewData["isLoggedin"] = "0";
             if (ModelState.IsValid)
             {
                 using (var context = new DbNewsContext())
@@ -31,30 +37,38 @@ namespace NewsPlatform3.Controllers
                             newLogin = false;
                             if (Passwd.Equals(item.Password))
                             {
-                                isPasswdOK |= true;
-                                ViewData["login"] = item.Login;
+                                isPasswdOK = true;
+                                thisLogin.isL = true;
+                                thisLogin.username = item.Login;
                                 if(item.Level == 0)
-                                    ViewData["level"] = "admin";
+                                    thisLogin.level = "admin";
                                 else if (item.Level > 9)
-                                    ViewData["level"] = "advanced";
+                                    thisLogin.level = "advanced";
                                 else
-                                    ViewData["level"] = "basic";
+                                    thisLogin.level = "basic";
+                                if (isLogin)  // Login
+                                {
+                                    TempData["isL"] = "y";
+                                    TempData["login"] = thisLogin.username;
+                                    TempData["level"] = thisLogin.level;
+                                    TempData["nok"] = "";
+
+                                    if (item.Level > 0)
+                                    {
+                                        item.Level++;
+                                        var u1 = context.Users.Update(item);
+                                        var result = context.SaveChangesAsync();
+                                    }
+                                    return RedirectToAction("GetListArticle", "Articles");
+                                }
                             }
                         }
                     }
-                    if(isLogin)  // Login
+                    if(isLogin)  // Login & Passwd NOK
                     {
-                        if (isPasswdOK)  // Login OK
-                        {
-                            ViewData["isLoggedin"] = "1";
-
-                            return View();
-                        }
-                        else // Login NOK
-                        {
-                            ViewData["isLoggedin"] = 0;
-                            return View();
-                        }
+                        TempData["isL"] = "n";
+                        TempData["nok"] = "Login was not possible. Try again.";
+                        return View();
                     }
                     else // Register
                     {
@@ -69,14 +83,14 @@ namespace NewsPlatform3.Controllers
                             };
                             var u1 = context.Users.AddAsync(user1);
                             var result = context.SaveChangesAsync();
-                            ViewData["isLoggedin"] = 1;
-                            ViewData["login"] = Login;
-
+                            TempData["isL"] = "n";
+                            TempData["nok"] = "Registration completed. Please log in.";
                             return View();
                         }
                         else // Reg NOK
                         {
-                            ViewData["isLoggedin"] = 0;
+                            TempData["isL"] = "n";
+                            TempData["nok"] = "Registration was not possible. Please try again.";
                             return View();
                         }
                     }
@@ -88,7 +102,6 @@ namespace NewsPlatform3.Controllers
                 Passwd = "";
                 return View();
             }
-            return RedirectToAction("Login");
         }
     }
 }

@@ -6,6 +6,7 @@ namespace NewsPlatform3
     {
         public static async Task Main(string[] args)
         {
+            
             //await CreateDataUser();
             //await CreateDataArticles();
 

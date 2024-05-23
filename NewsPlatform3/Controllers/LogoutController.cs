@@ -8,8 +8,9 @@ namespace NewsPlatform3.Controllers
     {
         public IActionResult Index()
         {
-            ViewData["isLoggedin"] = "0";
-            return View("~/Views/Home/Index.cshtml");
+            LoginController.thisLogin.isL = false;
+            TempData["isL"] = "n";
+            return RedirectToAction("Index", "Home");
         }
     }
 }

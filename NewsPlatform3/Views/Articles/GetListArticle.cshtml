@@ -4,12 +4,13 @@
     ViewData["Title"] = "List";
 }
 
-<h2>List of articles</h2>
+
+<h2 style="display: inline-block;">List of articles </h2>
 
 <ul>
     @foreach(var article in Model)
     {
-        <li><b>@article.Title</b> - @article.Content.Substring(0, Math.Min(30, article.Content.Length-1)) - 
+        <li><b>@article.Title</b> - @article.Content.Substring(0, Math.Min(36, article.Content.Length-1)) ... - 
             <a href="@Url.Action("GetArticle", "Articles", new { Id = article.Id})">Details</a>
         </li>
     }

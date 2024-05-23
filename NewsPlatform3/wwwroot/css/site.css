@@ -21,3 +21,24 @@ body {
   margin-bottom: 60px;
   background-color: lightskyblue;
 }
+
+#p_container {
+    width: 1200px;
+    height: 200px;
+    position: relative;
+}
+
+#p1 {
+    position: absolute;
+    left: 300px;
+}
+
+#p2 {
+    position: absolute;
+    left: 600px;
+}
+
+#p3 {
+    position: absolute;
+    left: 900px;
+}

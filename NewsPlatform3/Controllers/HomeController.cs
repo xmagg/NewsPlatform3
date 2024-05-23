@@ -8,7 +8,7 @@ namespace NewsPlatform3.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        private Boolean firstTime = true;
+        private static Boolean firstTime = true;
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -19,8 +19,22 @@ namespace NewsPlatform3.Controllers
         {
             if (firstTime)
             {
-                ViewData["isLoggedin"] = 0; // 0 - not,  1- is logged in
+                TempData["isL"] = "n";
                 firstTime = false;
+            }
+            else
+            {
+                if (LoginController.thisLogin.isL)  // Login OK
+                {
+                    TempData["isL"] = "y";
+                    TempData["login"] = LoginController.thisLogin.username;
+                    TempData["level"] = LoginController.thisLogin.level;
+                    TempData["nok"] = "";
+                }
+                else
+                {
+                    TempData["isL"] = "n";
+                }
             }
             return View();
         }

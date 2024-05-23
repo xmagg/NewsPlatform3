@@ -6,6 +6,7 @@
 @using (Html.BeginForm("Login","Login", FormMethod.Post))
 {
     <div style="color:red;">@Html.ValidationSummary()</div>
+    <div style="color:red;">@TempData["nok"]</div>
     <span>@Html.RadioButton("isLogin", true, true) Login </span>
     <span>@Html.RadioButton("isLogin", false) Register </span>
     <br/>
