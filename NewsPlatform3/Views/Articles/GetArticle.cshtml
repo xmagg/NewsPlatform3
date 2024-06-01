@@ -10,3 +10,13 @@
 <p>@Model.Content</p>
 <p></p>
 <p>Positive index: <b>@TempData["PositivityIndex"]</b></p>
+<p>Comments:</p>
+
+<ul>
+    @for(int i = 0; i < (int)TempData["CommQty"]; i++)
+    {
+        <li>
+            @TempData["Comm"+i.ToString()];
+        </li>
+    }
+</ul>

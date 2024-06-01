@@ -1,3 +1,4 @@
+using AspNetCore;
 using NewsPlatform3.Models;
 
 namespace NewsPlatform3
@@ -6,9 +7,13 @@ namespace NewsPlatform3
     {
         public static async Task Main(string[] args)
         {
-            
+
             //await CreateDataUser();
             //await CreateDataArticles();
+            //await CreateDataComment();
+
+            //DateTime saveNow = DateTime.Now;
+            //await CreateDataLog("admin", saveNow.ToString("yyyy-MM-dd HHmmss"), "init");
 
             var builder = WebApplication.CreateBuilder(args);
 
@@ -73,5 +78,41 @@ namespace NewsPlatform3
             }
         }
 
+        private static async Task CreateDataComment()
+        {
+            using (var context = new DbNewsContext())
+            {
+                context.Database.EnsureCreated();
+
+                var comment = new Comment()
+                {
+                    IdArticle = 0,
+                    IdUser = Guid.NewGuid(),
+                    Content = ""
+                };
+                var c1 = await context.Comments.AddAsync(comment);
+
+                var result = await context.SaveChangesAsync();
+            }
+        }
+
+        public static async Task CreateDataLog(string _login, string _date, string _descr)
+        {
+
+            using (var context = new DbNewsContext())
+            {
+                context.Database.EnsureCreated();
+
+                var log = new Log()
+                {
+                    Login = _login,
+                    Date = _date, // saveNow.ToString("yyyy-MM-dd HHmmss"),
+                    Description = _descr
+                };
+                var l1 = await context.Logs.AddAsync(log);
+
+                var result = await context.SaveChangesAsync();
+            }
+        }
     }
 }

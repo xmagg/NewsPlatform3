@@ -21,7 +21,7 @@ namespace NewsPlatform3.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(string Login, string Passwd, Boolean isLogin)
+        public  IActionResult Login(string Login, string Passwd, Boolean isLogin)
         {
             if (ModelState.IsValid)
             {
@@ -40,7 +40,7 @@ namespace NewsPlatform3.Controllers
                                 isPasswdOK = true;
                                 thisLogin.isL = true;
                                 thisLogin.username = item.Login;
-                                if(item.Level == 0)
+                                if (item.Level == 0)
                                     thisLogin.level = "admin";
                                 else if (item.Level > 9)
                                     thisLogin.level = "advanced";
@@ -57,14 +57,16 @@ namespace NewsPlatform3.Controllers
                                     {
                                         item.Level++;
                                         var u1 = context.Users.Update(item);
-                                        var result = context.SaveChangesAsync();
+
+
+                                        var result = context.SaveChanges();
                                     }
                                     return RedirectToAction("GetListArticle", "Articles");
                                 }
                             }
                         }
                     }
-                    if(isLogin)  // Login & Passwd NOK
+                    if (isLogin)  // Login & Passwd NOK
                     {
                         TempData["isL"] = "n";
                         TempData["nok"] = "Login was not possible. Try again.";

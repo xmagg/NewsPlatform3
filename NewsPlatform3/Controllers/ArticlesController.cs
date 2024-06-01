@@ -23,6 +23,10 @@ namespace NewsPlatform3.Controllers
                 TempData["login"] = LoginController.thisLogin.username;
                 TempData["level"] = LoginController.thisLogin.level;
                 TempData["nok"] = "";
+                TempData["CommQty"] = 3;   // number of comments
+                TempData["Comm0"] = "New comment 1 !!!";
+                TempData["Comm1"] = "New comment 2 !!!";
+                TempData["Comm2"] = "New comment 3 !!!";
                 return View(articles[id-1]);
             }
             else
