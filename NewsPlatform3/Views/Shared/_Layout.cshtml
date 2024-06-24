@@ -15,22 +15,27 @@
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">NewsPlatform</a>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        @if (TempData["isL"] == "y")
-
+                        @if(TempData["level"] == "admin")
                         {
                         <li class="nav-item">
-
-                            <a id="myMenu1" class="nav-link text-dark" asp-area="" asp-controller="Articles" asp-action="GetListArticle" style="pointer-events: auto">List</a>
-
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Articles" asp-action="AddArticle">Add Article</a>
                         </li>
-                        <li class="nav-item">
+                        }
+                        @if(TempData["isL"] == "y")
+                        {
+                            <li class="nav-item">
 
-                            <a id="myMenu3" class="nav-link text-dark" asp-area="" asp-controller="Logout" asp-action="Index" style="pointer-events: auto">Log out</a>
+                                <a id="myMenu1" class="nav-link text-dark" asp-area="" asp-controller="Articles" asp-action="GetListArticle" style="pointer-events: auto">List</a>
 
-                        </li>
-                        <li class="nav-item">
+                            </li>
+                            <li class="nav-item">
+
+                                <a id="myMenu3" class="nav-link text-dark" asp-area="" asp-controller="Logout" asp-action="Index" style="pointer-events: auto">Log out</a>
+
+                            </li>
+                            <li class="nav-item">
                                 <i><a id="myMenu4" class="nav-link text-dark" style="pointer-events: none; color: darkgreen">[ Login: @TempData["login"] / Level: @TempData["level"] ]</a></i>
-                        </li>
+                            </li>
                         }
                         else
                         {

@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NewsPlatform3.Models;
 
 namespace NewsPlatform3.Controllers
 {
+    //[ApiController]
+    //[Route("api/[controller]")]
     public class LoginController : Controller
     {
         public static Login thisLogin = new Login();
@@ -13,7 +16,8 @@ namespace NewsPlatform3.Controllers
  //           get { return thisLogin; } 
  //       }
 
-        [HttpGet]
+        [HttpGet(Name = "Login")]
+        //[Authorize]
         public IActionResult Login()
         {
             thisLogin.isL = false;
@@ -21,12 +25,14 @@ namespace NewsPlatform3.Controllers
         }
 
         [HttpPost]
+        //[Authorize]
         public  IActionResult Login(string Login, string Passwd, Boolean isLogin)
         {
             if (ModelState.IsValid)
             {
                 using (var context = new DbNewsContext())
                 {
+                    DateTime saveNow = DateTime.Now;
                     var users = context.Users.ToList();
                     var newLogin = true;
                     var isPasswdOK = false;
@@ -40,6 +46,7 @@ namespace NewsPlatform3.Controllers
                                 isPasswdOK = true;
                                 thisLogin.isL = true;
                                 thisLogin.username = item.Login;
+                                thisLogin.Guid = item.Id;
                                 if (item.Level == 0)
                                     thisLogin.level = "admin";
                                 else if (item.Level > 9)
@@ -57,10 +64,17 @@ namespace NewsPlatform3.Controllers
                                     {
                                         item.Level++;
                                         var u1 = context.Users.Update(item);
-
-
-                                        var result = context.SaveChanges();
                                     }
+                                    
+                                    var log = new Log()
+                                    {
+                                        Login = item.Login,
+                                        Date = saveNow.ToString("yyyy-MM-dd HHmmss"),
+                                        Description = "login OK"
+                                    };
+                                    var l1 = context.Logs.Add(log);
+                                    var result = context.SaveChanges(); 
+                                    
                                     return RedirectToAction("GetListArticle", "Articles");
                                 }
                             }
@@ -70,6 +84,16 @@ namespace NewsPlatform3.Controllers
                     {
                         TempData["isL"] = "n";
                         TempData["nok"] = "Login was not possible. Try again.";
+
+                        var log = new Log()
+                        {
+                            Login = Login,
+                            Date = saveNow.ToString("yyyy-MM-dd HHmmss"),
+                            Description = "login NOK"
+                        };
+                        var l1 = context.Logs.Add(log);
+                        var result = context.SaveChanges();
+
                         return View();
                     }
                     else // Register
@@ -83,8 +107,15 @@ namespace NewsPlatform3.Controllers
                                 Password = Passwd,
                                 Level = 1   // 1st login
                             };
-                            var u1 = context.Users.AddAsync(user1);
-                            var result = context.SaveChangesAsync();
+                            var u1 = context.Users.Add(user1);
+                            var log = new Log()
+                            {
+                                Login = Login,
+                                Date = saveNow.ToString("yyyy-MM-dd HHmmss"),
+                                Description = "registr OK"
+                            };
+                            var l1 = context.Logs.Add(log);
+                            var result = context.SaveChanges();
                             TempData["isL"] = "n";
                             TempData["nok"] = "Registration completed. Please log in.";
                             return View();
@@ -93,6 +124,14 @@ namespace NewsPlatform3.Controllers
                         {
                             TempData["isL"] = "n";
                             TempData["nok"] = "Registration was not possible. Please try again.";
+                            var log = new Log()
+                            {
+                                Login = Login,
+                                Date = saveNow.ToString("yyyy-MM-dd HHmmss"),
+                                Description = "registr NOK"
+                            };
+                            var l1 = context.Logs.Add(log);
+                            var result = context.SaveChanges();
                             return View();
                         }
                     }

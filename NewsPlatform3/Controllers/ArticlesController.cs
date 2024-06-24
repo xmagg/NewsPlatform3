@@ -15,19 +15,27 @@ namespace NewsPlatform3.Controllers
 
         public IActionResult GetArticle(int id)
         {
-
-            TempData["PositivityIndex"] = PositivityIndex(articles[id-1]);
+            TempData["PositivityIndex"] = PositivityIndex(articles[id]);
             if (LoginController.thisLogin.isL)  // Login OK
             {
                 TempData["isL"] = "y";
                 TempData["login"] = LoginController.thisLogin.username;
                 TempData["level"] = LoginController.thisLogin.level;
                 TempData["nok"] = "";
-                TempData["CommQty"] = 3;   // number of comments
-                TempData["Comm0"] = "New comment 1 !!!";
-                TempData["Comm1"] = "New comment 2 !!!";
-                TempData["Comm2"] = "New comment 3 !!!";
-                return View(articles[id-1]);
+                TempData["artId"] = id;
+
+                using (var context = new DbNewsContext())
+                {
+                    var comments = context.Comments.Where(c => c.IdArticle == articles[id].Id).OrderByDescending(c => c.Content).ToList();
+ 
+                    TempData["CommQty"] = comments.Count;   // number of comments
+                    int i = 0;
+                    foreach(var comment in comments)
+                    {
+                        TempData["Comm" + i.ToString()] = comments[i++].Content;
+                    }
+                }
+                return View(articles[id]);
             }
             else
             {
@@ -35,16 +43,67 @@ namespace NewsPlatform3.Controllers
             }
         }
 
+        public ActionResult DelArticle(int id)
+        {
+            using (var context = new DbNewsContext())
+            {
+                articles = context.Articles.ToList();
+                context.Articles.Remove(articles[id]);
+                var result = context.SaveChanges();
+            }
+            return RedirectToAction("GetListArticle", "Articles");
+        }
+
+        [HttpGet]
+        public ActionResult AddArticle() 
+        {
+            if (LoginController.thisLogin.isL)  // Login OK
+            {
+                TempData["isL"] = "y";
+                TempData["login"] = LoginController.thisLogin.username;
+                TempData["level"] = LoginController.thisLogin.level;
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult AddArticle(string title, string content)
+        {
+            if (title == null || content == null)
+            {
+                TempData["nok"] = "Empty title or content is not allowed!";
+                return View();
+            }
+            else
+            { 
+                using (var context = new DbNewsContext())
+                {
+                    var article = new Article()
+                    {
+                        Title = title,
+                        Content = content
+                    };
+                    context.Articles.Add(article);
+                    var result = context.SaveChanges();
+                }
+            return RedirectToAction("GetListArticle", "Articles");
+            }
+        }
+
         public IActionResult GetListArticle()
         {
-            
+
             if (LoginController.thisLogin.isL)  // Login OK
             {
                 TempData["isL"] = "y";
                 TempData["login"] = LoginController.thisLogin.username;
                 TempData["level"] = LoginController.thisLogin.level;
                 TempData["nok"] = "";
-               
+
                 return View(articles);
             }
             else
@@ -53,6 +112,23 @@ namespace NewsPlatform3.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult AddComment(string yourComment)
+        {
+            DateTime saveNow = DateTime.Now;
+            using (var context = new DbNewsContext())
+            {
+                var comment = new Comment()
+                {
+                    IdArticle = (int)TempData["ArticleID"],
+                    IdUser = LoginController.thisLogin.Guid,
+                    Content = saveNow.ToString("yyyy-MM-dd HH:mm") + " - " + LoginController.thisLogin.username + " - " + yourComment
+                };
+                var c1 = context.Comments.Add(comment);
+                var result = context.SaveChanges();
+            }
+            return RedirectToAction("GetArticle", "Articles", new { id = TempData["artId"] });
+        }
 
         private int PositivityIndex(Article article)
         {

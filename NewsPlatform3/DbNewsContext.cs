@@ -15,7 +15,7 @@ namespace NewsPlatform3
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=MAGLENUSIA\\SQLEXPRESS;Database=DbNews;TrustServerCertificate=true;Integrated Security=true;");
+            optionsBuilder.UseSqlServer("Server=MAGLENUSIA\\SQLEXPRESS;Database=DbNews;TrustServerCertificate=true;Integrated Security=true;MultipleActiveResultSets=true;");
         }
     }
 }

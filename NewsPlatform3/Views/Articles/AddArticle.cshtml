@@ -1,0 +1,21 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Add Article";
+}
+
+@using (Html.BeginForm("AddArticle", "Articles", FormMethod.Post))
+{
+    <div style="color:red;">@Html.ValidationSummary()</div>
+    <div style="color:red;">@TempData["nok"]</div>
+    <br />
+    <br>
+    <div>Title </div> @Html.TextBox("title", "")
+    <br />
+    <div>Content </div> @Html.TextArea("content", "")
+    <br />
+    <br />
+
+    <button type="submit">Submit</button>
+}

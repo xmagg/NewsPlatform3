@@ -2,16 +2,32 @@
 
 @{
     ViewData["Title"] = "List";
+    var i = -1;
 }
 
 
 <h2 style="display: inline-block;">List of articles </h2>
-
+@if (TempData["level"] != "basic")
+{
+    <button onclick="changeRGB()">Change BkGnd</button>
+    <input id="rgb_bkgnnd" type="color" />
+}
 <ul>
-    @foreach(var article in Model)
+    @foreach (var article in Model)
     {
         <li><b>@article.Title</b> - @article.Content.Substring(0, Math.Min(36, article.Content.Length-1)) ... - 
-            <a href="@Url.Action("GetArticle", "Articles", new { Id = article.Id})">Details</a>
+            <a href="@Url.Action("GetArticle", "Articles", new { Id = ++i})">Details</a>
+            &emsp;
+            @if (TempData["level"] == "admin")
+            {
+                <a href="@Url.Action("DelArticle", "Articles", new { Id = i})">Remove</a>
+            }
         </li>
     }
 </ul>
+
+<script>
+    function changeRGB() {
+        document.body.style.backgroundColor = document.getElementById("rgb_bkgnnd").value;
+    }
+</script>
